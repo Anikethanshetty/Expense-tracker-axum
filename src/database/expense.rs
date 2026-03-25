@@ -18,8 +18,8 @@ pub trait ExpenseExt {
 
     async fn get_all_expenses(
         &self,
-        page:i64,
-        limit:i64,
+        page:Option<i64>,
+        limit:Option<i64>,
         user_id:Uuid,
         category_id:Uuid,
     )->Result<Option<Vec<Expense>>,Error>;
@@ -78,11 +78,15 @@ impl ExpenseExt for DBClient {
 
     async fn get_all_expenses(
         &self,
-        page:i64,
-        limit:i64,
+        page:Option<i64>,
+        limit:Option<i64>,
         user_id:Uuid,
         category_id:Uuid,
     )->Result<Option<Vec<Expense>>,Error> {
+
+        let page = page.unwrap_or(1);
+        let limit = limit.unwrap_or(10);
+
         let offset = (page - 1) * limit;
 
         let expenses = sqlx::query_as!(

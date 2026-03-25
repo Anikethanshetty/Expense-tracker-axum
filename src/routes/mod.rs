@@ -8,6 +8,7 @@ mod auth;
 mod user;
 mod category;
 mod budget;
+mod expense;
 
 pub fn create_router(app_state : Arc<AppState>) -> Router {
     let api_routes = Router::new()

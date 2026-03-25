@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use chrono::{ NaiveDate};
 use sqlx::types::Uuid;
 
-#[derive(Debug,Serialize,Deserialize,sqlx::FromRow)]
+#[derive(Debug,Serialize,Deserialize,sqlx::FromRow,Default)]
 pub struct Expense {
     pub id: Uuid,
     pub amount: BigDecimal,

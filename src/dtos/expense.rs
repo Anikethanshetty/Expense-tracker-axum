@@ -37,7 +37,7 @@ fn validate_expense_date(date: &NaiveDate) -> Result<(), ValidationError> {
 
 #[derive(Debug,Serialize,Deserialize)]
 pub struct ExpenseData {
-    pub expense: FilterExpense 
+    pub expense: FilterExpense
 }
 
 #[derive(Debug,Serialize,Deserialize)]
@@ -45,6 +45,18 @@ pub struct ExpenseResponseDto {
     pub status: &'static str,
     pub data: ExpenseData
 }
+
+#[derive(Debug,Serialize,Deserialize)]
+pub struct ExpensesResponseDto {
+    pub status: &'static str,
+    pub data: ExpensesData
+}
+
+#[derive(Debug,Serialize,Deserialize)]
+pub struct ExpensesData {
+    pub expense: Vec<FilterExpense> 
+}
+
 
 
 #[derive(Debug,Serialize,Deserialize,Validate)]
@@ -59,18 +71,14 @@ pub struct CreateExpenseDto {
 }
 
 
-#[derive(Debug,Serialize,Deserialize,Validate)]
-pub struct GetExpenseDto {
-    #[serde(rename="expenseId")]
-    pub expense_id: Uuid
-}
+
 
 #[derive(Debug,Serialize,Deserialize,Validate)]
 pub struct GetExpensesQuery {
     #[validate(range(min=1,message="page must be greater than or equal to one"))]
-    pub page: Option<u32>,
+    pub page: Option<i64>,
     # [validate(range(min=1,max=100,message="limit must greater than 1 or equal to 1 and less than 100"))]
-    pub limit: Option<u32>
+    pub limit: Option<i64>
 }
 
 #[derive(Debug,Serialize,Deserialize,Validate)]
@@ -79,7 +87,11 @@ pub struct UpdateExpenseDto {
     pub amount: Option<f64>,
     #[serde(rename="expenseDate")]
     #[validate(custom(function="validate_expense_date"))]
-    pub expense_date: Option<NaiveDate>
+    pub expense_date: Option<NaiveDate>,
+     #[serde(rename = "categoryId")]
+    pub category_id: Uuid,
+     #[serde(rename = "expenseId")]
+    pub expense_id: Uuid,
 }
 
 #[derive(Debug,Serialize,Deserialize)]
@@ -87,5 +99,5 @@ pub struct DeleteExpenseDto {
     #[serde(rename="categorryId")]
     pub category_id:Uuid,
     #[serde(rename="expenseId")]
-    pub expense_id: Uuid
+    pub expense_id: Uuid,
 }
