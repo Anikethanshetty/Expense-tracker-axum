@@ -20,7 +20,7 @@ impl AuthExt for DBClient {
         let user = sqlx::query_as!(
             User,
             r#"
-                SELECT * FROM users
+                SELECT id, username, email, password, created_at, updated_at FROM users
                 WHERE email = $1
             "#,
             email.into(),

@@ -73,9 +73,17 @@ pub async fn login(
         .await
         .map_err(|e| HttpError::server_error(e.to_string()))?;
 
+
+    
     let user = user.ok_or(
         HttpError::unauthorized(ErrorMessage::UserNoLongerExist.to_string())
     )?;
+    
+    let res = FilterUserDto::filter_user(&user, 
+                            None, None, None);
+
+    println!("{:?}",&res);
+
 
     let password_valid = password::compare(
         &body.password,
@@ -109,9 +117,10 @@ pub async fn login(
                         .build();
 
         headers.append(header::SET_COOKIE, cookie.to_string().parse().unwrap());
-    return 
+   
         Ok((
             StatusCode::OK,
+            headers,
             Json(
                 UserResponse {
                     status: "success",
@@ -121,5 +130,5 @@ pub async fn login(
                     }
                 }
             )
-        ).into_response().headers_mut().extend(headers));
+        ))
 }

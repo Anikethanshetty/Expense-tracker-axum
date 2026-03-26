@@ -121,6 +121,9 @@ pub async fn update_expense(
 ) -> Result<impl IntoResponse,HttpError>
     {
 
+            body.validate()
+        .map_err(|e| HttpError::bad_request(e.to_string()))?;
+
     let amount = body.amount.map(|val|{
             BigDecimal::from_str(&val.to_string()).unwrap()
     }); 
@@ -157,6 +160,9 @@ pub async fn update_expense(
 ) 
     -> Result<impl IntoResponse,HttpError>
     {
+
+            body.validate()
+        .map_err(|e| HttpError::bad_request(e.to_string()))?;
         
          let _ = app_state
             .db_client
